@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Butterfly Image</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://png.pngtree.com/thumb_back/fh260/background/20230512/pngtree-butterfly-rice-dewdrops-nature-background-image_2414292.jpg') no-repeat center center/cover;
+      min-height: 100vh;
+      color: #fff;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+    }
+
+    nav {
+      background-color: rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      text-align: right;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav a {
+      display: inline-block;
+      color: white;
+      padding: 10px 18px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    nav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+.file-label {
+  background-color: green;
+  color: white;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.file-label:hover {
+  background-color: #218838;
+}
+
+.file-name {
+  display: inline-block;
+  margin-left: 15px;
+  font-size: 18px;
+  color:black; /* bright white text for visibility */
+  text-shadow: 1px 1px 2px #000; /* add contrast */
+}
+
+    .main-content {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    h2 {
+      font-size: 36px;
+      margin-bottom: 30px;
+      color: #fff;
+      text-shadow: 1px 1px 4px #000;
+    }
+
+    form {
+      background-color: rgba(255, 255, 255, 0.95);
+      display: inline-block;
+      padding: 30px 50px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="file"] {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    input[type="submit"] {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+    }
+
+    #preview {
+      display: none;
+      margin-top: 40px;
+    }
+
+    #previewText {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: white;
+      text-shadow: 1px 1px 3px #000;
+    }
+
+    #imagePreview {
+      max-width: 90vw;
+      max-height: 70vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="/">Home</a>
+    <a href="/input">Predict</a>
+    <a onclick="openAboutPage()">About</a>
+    <a onclick="openContactPage()">Contact</a>
+  </nav>
+
+  <!-- Upload + Preview -->
+  <div class="main-content">
+    <h2>Upload an image for butterfly prediction</h2>
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+  <label for="fileInput" class="file-label">Choose Image</label>
+  <span id="fileName" class="file-name">No file chosen</span><br><br>
+  <input type="file" name="file" id="fileInput" accept="image/*" required hidden>
+  <br><br>
+  <input type="submit" value="Predict">
+</form>
+
+    <div id="preview">
+      <div id="previewText">Preview:</div>
+      <img id="imagePreview" src="#" alt="Uploaded image">
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const previewDiv = document.getElementById("preview");
+    const previewImage = document.getElementById("imagePreview");
+const fileNameSpan = document.getElementById("fileName");
+
+fileInput.addEventListener("change", function () {
+  const file = this.files[0];
+  if (file) {
+    fileNameSpan.textContent = file.name;
+    previewImage.src = URL.createObjectURL(file);
+    previewDiv.style.display = "block";
+  } else {
+    fileNameSpan.textContent = "No file chosen";
+    previewDiv.style.display = "none";
+    previewImage.src = "#";
+  }
+});
+
+    function openAboutPage() {
+      const aboutWindow = window.open("", "_blank", "width=800,height=600");
+      aboutWindow.document.write(`
+        <html>
+          <head>
+            <title>About</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 40px; background-color: #fdfdfd; color: #333; }
+              h1 { text-align: center; color: #2c3e50; }
+              p, ul { font-size: 18px; line-height: 1.7; }
+              ul { padding-left: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>About This Project</h1>
+            <p><strong>Enchanted Wings</strong> is a butterfly classification app powered by deep learning using the VGG16 model.</p>
+            <p>The model has been trained on over 70 butterfly species using TensorFlow and Keras.</p>
+            <p><strong>Technologies:</strong></p>
+            <ul>
+              <li>Python</li>
+              <li>TensorFlow / Keras</li>
+              <li>Flask Web Framework</li>
+            </ul>
+            <p>This tool can be useful for students, nature lovers, and researchers interested in biodiversity.</p>
+          </body>
+        </html>
+      `);
+    }
+
+    function openContactPage() {
+      const contactWindow = window.open("", "_blank", "width=600,height=400");
+      contactWindow.document.write(`
+        <html>
+          <head>
+            <title>Contact</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 40px; background-color: #f9f9f9; color: #333; }
+              h1 { text-align: center; color: #2c3e50; }
+              p { font-size: 20px; line-height: 1.6; }
+            </style>
+          </head>
+          <body>
+            <h1>Contact</h1>
+            <p><strong>Developer:</strong> G. Himanjali</p>
+            <p><strong>Email:</strong> himanjali@example.com</p>
+            <p><strong>Institution:</strong> Vishnu Institute of Technology, Bhimavaram</p>
+          </body>
+        </html>
+      `);
+    }
+  </script>
+
+</body>
+</html>
